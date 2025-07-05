@@ -18,7 +18,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.7",
@@ -39,6 +40,9 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20",
     "@types/pdf-parse": "^1.1.4",
     "@types/react": "^18",
@@ -47,6 +51,9 @@
     "@types/xml2js": "^0.4.14",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
+    "jest": "^30.0.4",
+    "jest-environment-jsdom": "^30.0.4",
+    "ts-jest": "^29.4.0",
     "typescript": "^5"
   }
 }
