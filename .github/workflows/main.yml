@@ -14,7 +14,7 @@ jobs:
       - name: Getting the code
         uses: actions/checkout@4.2.2
       - name: running tests
-        run: npm run test
+        run: npm install && npm run test
       - name: lint analyses
         run: npm run lint
       - name: Authentication at docker hub
@@ -47,3 +47,39 @@ jobs:
         aws-region: us-east-1
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    - name: Initing terraform
+      run: terraform init -backend-config="bucket=${{ secrets.TF_STATE_BUCKET }}" -backend-config="key=eks.tfstate" -backend-config="region=${{ env.AWS_REGION }}"
+      working-directory: ${{env.TF_WORKING_DIR}}
+    - name: Terraform Validate
+      run: terraform validate
+      working-directory: ${{ env.TF_WORKING_DIR }}
+    - name: Terraform Apply
+      id: apply
+      # Only apply if the plan was successful and not empty
+      run: terraform apply -auto-approve tfplan
+      working-directory: ${{ env.TF_WORKING_DIR }}
+    - name: Terraform Output
+      run: terraform output
+      working-directory: ${{ env.TF_WORKING_DIR }}
+    - name: Get EKS Cluster Name
+      id: get_cluster_name
+        # Assuming your Terraform outputs the EKS cluster name as 'eks_cluster_name'
+      run: echo "EKS_CLUSTER_NAME=$(terraform output -raw fabricio_eks)" >> $GITHUB_ENV
+      working-directory: ${{ env.TF_WORKING_DIR }}
+
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v3 # Install kubectl CLI
+    - name: Configure kubeconfig for EKS
+      run: |
+          aws eks update-kubeconfig --name "${{ env.EKS_CLUSTER_NAME }}"
+          echo "KUBECONFIG configured for cluster: ${{ env.EKS_CLUSTER_NAME }}"
+
+    - name: Verify kubectl access
+      run: kubectl get nodes # Verify that kubectl can communicate with the cluster
+    - name: Installing the nginx ingress-controller
+      run: kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.13.0/deploy/static/provider/aws/deploy.yaml
+    - name: Running manifests
+      run: kubectl apply -f ./k8s/deploy.yml -n ingress-nginx; kubectl apply -f ./k8s/ingress.yml -n ingress-nginx
+    - name: Terraform Output
+      run: terraform output
+      working-directory: ${{ env.TF_WORKING_DIR }}
