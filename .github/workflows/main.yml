@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 env:
   TF_WORKING_DIR: ./k8s/cluster
-
+  TERRAFORM_TOKEN_app_terraform_io: ${{ secrets.TERRAFORM_TOKEN_app_terraform_io }}
 jobs:
   CI:
     runs-on: ubuntu-latest
