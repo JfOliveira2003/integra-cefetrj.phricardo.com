@@ -41,6 +41,7 @@ jobs:
       uses: hashicorp/setup-terraform@v3 # Install Terraform CLI
       with:
           terraform_version: 1.12.0
+          cli_config_credentials_token: ${{env.TERRAFORM_TOKEN_app_terraform_io}}
     - name: Aws Configuring
       uses: aws-actions/configure-aws-credentials@v4.1.0
       with:
