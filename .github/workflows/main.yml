@@ -62,7 +62,7 @@ jobs:
     - name: Terraform Apply
       id: apply
       # Only apply if the plan was successful and not empty
-      run: terraform apply -auto-approve tfplan
+      run: terraform apply -auto-approve
       working-directory: ${{ env.TF_WORKING_DIR }}
     - name: Terraform Output
       run: terraform output
