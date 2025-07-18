@@ -15,4 +15,5 @@ Federal de Educação Tecnológica Celso Suckow da Fonseca (CEFET/RJ).
 
 <a href="https://github.com/phricardorj/integra.cefetrj/graphs/contributors">
   <img src="https://contributors-img.web.app/image?repo=phricardorj/integra.cefetrj&max=500" alt="List of contributors" />
+  <img src="/images/github_profile.png" />
 </a>
